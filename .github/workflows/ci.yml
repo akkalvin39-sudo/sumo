@@ -1,11 +1,37 @@
 on: [push]
+
 jobs:
   build_and_static_analysis:
     runs-on: ubuntu-latest
-    container:
-      image: artfulbytes/msp430-gcc-9.3.1.11:latest
+
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v3
-      - run: TOOLS_PATH=/home/ubuntu/dev/tools make
-      - run: make cppcheck
+
+      - name: Install MSP430 toolchain + support files
+        run: |
+          mkdir -p $HOME/dev/tools
+
+          # Download compiler
+          wget -q https://dr-download.ti.com/software-development/ide-configuration-compiler-or-debugger/MD-LlCjWuAbzH/9.3.1.2/msp430-gcc-9.3.1.11_linux64.tar.bz2 -O /tmp/msp430.tar.bz2
+          tar xjf /tmp/msp430.tar.bz2 -C /tmp
+          mv /tmp/msp430-gcc-*linux64 $HOME/dev/tools/msp430-gcc
+
+          # Download support files
+          wget -q https://dr-download.ti.com/software-development/ide-configuration-compiler-or-debugger/MD-LlCjWuAbzH/9.3.1.2/msp430-gcc-support-files-1.212.zip -O /tmp/support.zip
+          unzip -q /tmp/support.zip -d /tmp
+
+          # Find support folder dynamically
+          SUPPORT_DIR=$(find /tmp -maxdepth 1 -type d -name "msp430-gcc-support-files*")
+          echo "Support folder found at: $SUPPORT_DIR"
+
+          cp -r $SUPPORT_DIR/* $HOME/dev/tools/msp430-gcc/
+
+      - name: Install cppcheck
+        run: sudo apt-get update && sudo apt-get install -y cppcheck
+
+      - name: Build
+        run: TOOLS_PATH=$HOME/dev/tools make
+
+      - name: Run Cppcheck
+        run: make cppcheck
