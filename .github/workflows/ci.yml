@@ -30,6 +30,9 @@ jobs:
       - name: Install cppcheck
         run: sudo apt-get update && sudo apt-get install -y cppcheck
 
+      - name: Check formatting
+        run: make format && git diff --quiet
+
       - name: Build
         run: TOOLS_PATH=$HOME/dev/tools make
 

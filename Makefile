@@ -21,7 +21,7 @@ CC = $(MSPGCC_BIN_DIR)/msp430-elf-gcc
 RM = rm
 DEBUG = LD_LIBRARY_PATH=$(DEBUG_DRIVERS_DIR) $(DEBUG_BIN_DIR)/mspdebug
 CPPCHECK = cppcheck
-
+FORMAT = clang-format
 # Files
 TARGET = $(BIN_DIR)/nsumo
 
@@ -50,7 +50,6 @@ WFLAGS = -Wall -Wextra -Werror -Wshadow
 CFLAGS = -mmcu=$(MCU) $(WFLAGS) $(addprefix -I,$(INCLUDE_DIRS)) -Og -g
 LDFLAGS = -mmcu=$(MCU) $(addprefix -L,$(LIB_DIRS))
 
-#testing
 # Build
 ## Linking
 $(TARGET): $(OBJECTS)
@@ -64,7 +63,7 @@ $(OBJ_DIR)/%.o: %.c
 	$(CC) $(CFLAGS) -c -o $@ $^
 
 # Phonies
-.PHONY: all clean flash cppcheck
+.PHONY: all clean flash cppcheck format
 
 all: $(TARGET)
 
@@ -81,3 +80,5 @@ cppcheck:
 	$(SOURCES) \
 	-i external/printf
 
+format:
+	$(FORMAT) -i $(SOURCES)
