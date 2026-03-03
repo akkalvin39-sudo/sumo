@@ -43,6 +43,19 @@ HEADERS = \
 OBJECT_NAMES = $(SOURCES:.c=.o)
 OBJECTS = $(patsubst %,$(OBJ_DIR)/%,$(OBJECT_NAMES))
 
+# Static Analysis
+## Don't check the msp430 helper headers (they have a LOT of ifdefs)
+CPPCHECK_INCLUDES = ./src
+CPPCHECK_IGNORE = external/printf
+CPPCHECK_FLAGS = \
+	--quiet --enable=all --error-exitcode=1 \
+	--inline-suppr \
+	--suppress=missingIncludeSystem \
+	--suppress=unmatchedSuppression \
+	--suppress=unusedFunction \
+	$(addprefix -I,$(CPPCHECK_INCLUDES)) \
+	$(addprefix -i,$(CPPCHECK_IGNORE))
+	
 # Flags
 MCU = msp430g2553
 WFLAGS = -Wall -Wextra -Werror -Wshadow
