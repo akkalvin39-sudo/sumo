@@ -30,8 +30,15 @@ jobs:
       - name: Install cppcheck
         run: sudo apt-get update && sudo apt-get install -y cppcheck
 
+      - name: Install clang-format
+        run: |
+          wget -qO- https://apt.llvm.org/llvm-snapshot.gpg.key | sudo tee /etc/apt/trusted.gpg.d/apt.llvm.org.asc
+          sudo add-apt-repository -y "deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-21 main"
+          sudo apt-get update
+          sudo apt-get install -y clang-format-21
+
       - name: Check formatting
-        run: make format && git diff --quiet
+        run: make format FORMAT=clang-format-21 && git diff --quiet
 
       - name: Build
         run: TOOLS_PATH=$HOME/dev/tools make
