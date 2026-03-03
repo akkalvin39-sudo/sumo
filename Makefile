@@ -50,6 +50,7 @@ WFLAGS = -Wall -Wextra -Werror -Wshadow
 CFLAGS = -mmcu=$(MCU) $(WFLAGS) $(addprefix -I,$(INCLUDE_DIRS)) -Og -g
 LDFLAGS = -mmcu=$(MCU) $(addprefix -L,$(LIB_DIRS))
 
+#testing
 # Build
 ## Linking
 $(TARGET): $(OBJECTS)
