@@ -27,6 +27,7 @@ FORMAT = clang-format
 TARGET = $(BIN_DIR)/nsumo
 
 SOURCES_WITH_HEADERS = \
+		src/drivers/mcu_init.c \
 		src/drivers/io.c \
 		src/app/drive.c \
 		src/app/enemy.c \
@@ -52,6 +53,7 @@ CPPCHECK_FLAGS = \
 	--suppress=missingIncludeSystem \
 	--suppress=unmatchedSuppression \
 	--suppress=unusedFunction \
+	--suppress=staticFunction \
 	$(addprefix -I,$(CPPCHECK_INCLUDES)) \
 	$(addprefix -i,$(CPPCHECK_IGNORE))
 
