@@ -27,8 +27,7 @@ FORMAT = clang-format
 TARGET = $(BIN_DIR)/nsumo
 
 SOURCES_WITH_HEADERS = \
-		src/drivers/uart.c \
-		src/drivers/i2c.c \
+		src/drivers/io.c \
 		src/app/drive.c \
 		src/app/enemy.c \
 
@@ -55,7 +54,7 @@ CPPCHECK_FLAGS = \
 	--suppress=unusedFunction \
 	$(addprefix -I,$(CPPCHECK_INCLUDES)) \
 	$(addprefix -i,$(CPPCHECK_IGNORE))
-	
+
 # Flags
 MCU = msp430g2553
 WFLAGS = -Wall -Wextra -Werror -Wshadow
@@ -86,11 +85,7 @@ flash: $(TARGET)
 	$(DEBUG) tilib "prog $(TARGET)"
 
 cppcheck:
-	@$(CPPCHECK) --quiet --enable=all --error-exitcode=1 \
-	--inline-suppr \
-	-I $(INCLUDE_DIRS) \
-	$(SOURCES) \
-	-i external/printf
+	@$(CPPCHECK) $(CPPCHECK_FLAGS) $(SOURCES)
 
 format:
 	@$(FORMAT) -i $(SOURCES) $(HEADERS)
