@@ -41,7 +41,9 @@ jobs:
         run: make format FORMAT=clang-format-21 && git diff --quiet
 
       - name: Build
-        run: TOOLS_PATH=$HOME/dev/tools make
+        run: |
+          TOOLS_PATH=$HOME/dev/tools make HW=NSUMO
+          TOOLS_PATH=$HOME/dev/tools make HW=LAUNCHPAD
 
       - name: Run Cppcheck
         run: make cppcheck
